@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>
+<html lang="en" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>
+<html lang="en" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>
+<html lang="en" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en" class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Report submit </title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="bower_components/angular-material/angular-material.css"/>
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+    <link href="bower_components/angular-material-data-table/dist/md-data-table.min.css" rel="stylesheet"
+          type="text/css"/>
+
+
+    <script type="text/javascript" src="bower_components/angularjs/angular.js"></script>
+    <script type="text/javascript" src="bower_components/angular-aria/angular-aria.js"></script>
+    <script type="text/javascript" src="bower_components/angular-animate/angular-animate.js"></script>
+    <script type="text/javascript" src="bower_components/angular-messages/angular-messages.js"></script>
+    <script type="text/javascript" src="bower_components/angular-resource/angular-resource.js"></script>
+    <script type="text/javascript" src="bower_components/angular-route/angular-route.js"></script>
+    <script type="text/javascript" src="bower_components/angular-material/angular-material.js"></script>
+    <script type="text/javascript"
+            src="bower_components/angular-material-data-table/dist/md-data-table.min.js"></script>
+
+
+    <script type="text/javascript" src="js/app.js"></script>
+
+</head>
+<body ng-app="myApp" ng-cloak>
+<div ng-controller="MainController" class="tabsdemoStaticTabs">
+    <md-content class="md-padding">
+        <md-tabs class="md-accent" md-selected="data.selectedIndex" md-align-tabs="{{data.bottom ? 'bottom' : 'top'}}">
+            <md-tab id="tab1">
+                <md-tab-label>周报列表</md-tab-label>
+            </md-tab>
+            <md-tab id="tab2">
+                <md-tab-label>新增周报</md-tab-label>
+            </md-tab>
+            <md-tab id="tab3">
+                <md-tab-label>开发指南</md-tab-label>
+            </md-tab>
+        </md-tabs>
+    </md-content>
+
+
+    <ng-switch on="data.selectedIndex" class="tabpanel-container">
+        <div role="tabpanel" id="tab1-content" aria-labelledby="tab1" ng-switch-when="0" md-swipe-left="next()"
+             md-swipe-right="previous()">
+            <md-toolbar class="md-table-toolbar md-default">
+                <div class="md-toolbar-tools">
+                    <span>周报列表</span>
+                    <md-button class="md-raised" ng-click="goNewReport()">新增周报</md-button>
+                </div>
+            </md-toolbar>
+
+            <!-- exact table from live demo -->
+            <md-table-container>
+                <table md-table md-row-select multiple ng-model="selected" md-progress="promise">
+                    <thead md-head md-order="query.order" md-on-reorder="getDesserts">
+                    <tr md-row>
+                        <th md-column md-order-by="startDate">开始日期</th>
+                        <th md-column md-numeric>结束日期</th>
+                        <th md-column md-numeric>报告人</th>
+                        <th md-column md-numeric>报告内容</th>
+                        <th md-column md-numeric>进度(%)</th>
+                        <th md-column md-numeric>提交文件 (%)</th>
+                    </tr>
+                    </thead>
+                    <tbody md-body>
+                    <tr md-row md-select="report" md-select-id="report.startDate" md-auto-select
+                        ng-repeat="report in Report.data">
+                        <td md-cell>{{report.startDate}}</td>
+                        <td md-cell>{{report.calories.value}}</td>
+                        <td md-cell>{{report.fat.value | number: 1}}</td>
+                        <td md-cell>{{report.carbs.value}}</td>
+                        <td md-cell>{{report.protein.value | number: 1}}</td>
+                        <td md-cell>{{report.sodium.value}}</td>
+                        <td md-cell>{{report.calcium.value}}{{report.calcium.unit}}</td>
+                        <td md-cell>{{report.iron.value}}{{report.iron.unit}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </md-table-container>
+
+            <md-table-pagination md-limit="query.limit" md-limit-options="[5, 10, 15]" md-page="query.page"
+                                 md-total="{{desserts.count}}" md-on-paginate="getDesserts"
+                                 md-page-select></md-table-pagination>
+
+        </div>
+        <div role="tabpanel" id="tab2-content" aria-labelledby="tab2" ng-switch-when="1" md-swipe-left="next()"
+             md-swipe-right="previous()">
+            <form class="report-form">
+                <h1>民生租赁项目个人周报</h1>
+                <div layout="row" layout-xs="column">
+                    <ul>
+                        <li>
+                            <label>开始日期</label>
+                            <md-datepicker ng-model="newReport.startDate" md-placeholder="Enter date"></md-datepicker>
+                            <span> ~ </span>
+                            <label>结束日期</label>
+                            <md-datepicker ng-model="newReport.endDate" md-placeholder="Enter date"></md-datepicker>
+                        </li>
+                        <li>
+                            <label>报告人</label>
+                            <input ng-model="newReport.reporter" type="text">
+                        </li>
+                        <li>
+                            <label>提交日期</label>
+                            <md-datepicker ng-model="newReport.submitDate" md-placeholder="Enter date"></md-datepicker>
+                        </li>
+                    </ul>
+                </div>
+                <div layout="column" layout-xs="column" class="report-table">
+                    <div flex class="title-line">
+                        <p1>一、本周工作总结</p1>
+                    </div>
+                    <div flex class="title-item" >
+                        <textarea ng-model="newReport.summary"></textarea>
+                    </div>
+                    <div flex class="title-line" >
+                        <p1>二、下周工作计划</p1>
+                    </div>
+                    <div flex class="title-item" >
+                        <textarea></textarea>
+                    </div>
+                    <div flex class="title-line" >
+                        <p1>三、风险和问题</p1>
+                    </div>
+                    <div flex class="title-item" >
+                        <textarea></textarea>
+                    </div>
+                    <div flex class="title-line" >
+                        <p1>四、意见和建议</p1>
+                    </div>
+                    <div flex class="title-item" >
+                        <textarea></textarea>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div role="tabpanel" id="tab3-content" aria-labelledby="tab3" ng-switch-when="2" md-swipe-left="next()"
+             md-swipe-right="previous()">
+            <ul>
+                <li><a href="https://material.angularjs.org">front-end</a></li>
+                <li><a href="https://spring.io/blog/2015/01/12/spring-and-angular-js-a-secure-single-page-application">back-end</a></li>
+            </ul>
+        </div>
+    </ng-switch>
+</div>
+
+
+</body>
+</html>
