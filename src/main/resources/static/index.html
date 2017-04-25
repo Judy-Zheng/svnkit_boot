@@ -29,7 +29,7 @@
     <script type="text/javascript" src="bower_components/angular-material/angular-material.js"></script>
     <script type="text/javascript"
             src="bower_components/angular-material-data-table/dist/md-data-table.min.js"></script>
-
+    <script type="text/javascript" src="bower_components/moment/moment.js"></script>
 
     <script type="text/javascript" src="js/app.js"></script>
 
@@ -103,10 +103,11 @@
                     <ul>
                         <li>
                             <label>开始日期</label>
-                            <md-datepicker ng-model="newReport.startDate" md-placeholder="Enter date"></md-datepicker>
+                            <md-datepicker ng-model="newReport.startDate" ng-change="add7Days()" md-date-filter="onlyThursdayPredicate"
+                                           md-placeholder="Enter date"></md-datepicker>
                             <span> ~ </span>
                             <label>结束日期</label>
-                            <md-datepicker ng-model="newReport.endDate" md-placeholder="Enter date"></md-datepicker>
+                            <md-datepicker ng-model="newReport.endDate"  md-placeholder="请选择开始日期" disabled></md-datepicker>
                         </li>
                         <li>
                             <label>报告人</label>
@@ -114,7 +115,7 @@
                         </li>
                         <li>
                             <label>提交日期</label>
-                            <md-datepicker ng-model="newReport.submitDate" md-placeholder="Enter date"></md-datepicker>
+                            <md-datepicker ng-model="newReport.submitDate" md-placeholder="请选择开始日期" disabled></md-datepicker>
                         </li>
                     </ul>
                 </div>
