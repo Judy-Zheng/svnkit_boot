@@ -16,12 +16,14 @@
 package com.example.repository;
 
 import com.example.domain.entity.Commit;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -46,9 +48,11 @@ public class CommitRepository {
         });
     }
 
-    public  List<Commit> findCommitByUser(String userId){
+    public  List<Commit> findCommitByUser(String userId,Date startDate){
         Query query = new Query();
         query.addCriteria(Criteria.where("author.name").is(userId));
+        Date endDay = DateUtils.addDays(startDate,7);
+        query.addCriteria(Criteria.where("authorTimestamp").gt(startDate).lt(endDay));
         return mongoTemplate.find(query,Commit.class);
     }
 }

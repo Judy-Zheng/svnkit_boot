@@ -18,8 +18,10 @@ package com.example;
 import com.example.domain.entity.Commit;
 import com.example.repository.CommitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -45,7 +47,7 @@ public class GitCommitController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<Commit> queryCommitByUser(@RequestParam  String userId){
-        return commitRepository.findCommitByUser(userId);
+    public List<Commit> queryCommitByUser(@RequestParam  String userId,@RequestParam @DateTimeFormat(pattern="yyyy-MM-dd") Date startDate){
+        return commitRepository.findCommitByUser(userId,startDate);
     }
 }

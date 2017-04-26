@@ -55,7 +55,9 @@
             };
 
             $scope.find = function() {
-                $http.get("http://localhost:8080/commit?userId="+$scope.userId).then(function (resp) {
+                var startDate = moment($scope.newReport.startDate).format('YYYY-MM-DD');
+                $http.get("http://localhost:8080/commit?userId="+$scope.newReport.reporter+"&startDate="+startDate)
+                    .then(function (resp) {
                     $scope.newReport.summary = resp.data.map(function (d) {
                         return d.message;
                     }).join('\n');
@@ -63,6 +65,6 @@
                 })
             }
 
-            $scope.find();
+
         }]);
 })(angular);

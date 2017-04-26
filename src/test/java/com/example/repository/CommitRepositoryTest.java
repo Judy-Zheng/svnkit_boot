@@ -2,6 +2,7 @@ package com.example.repository;
 
 import com.example.domain.entity.Author;
 import com.example.domain.entity.Commit;
+import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ public class CommitRepositoryTest {
 
     @Test
     public void findCommitByUser() throws Exception {
-        List<Commit> result = commitRepository.findCommitByUser("how");
+        List<Commit> result = commitRepository.findCommitByUser("how", DateUtils.parseDate("2017-04-16","yyyy-MM-dd"));
         System.out.println(result);
     }
 }
