@@ -13,24 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example;
+package com.example.resource;
 
+import com.example.application.ReportService;
 import com.example.domain.entity.Commit;
+import com.example.domain.entity.ReportModel;
 import com.example.repository.CommitRepository;
+import freemarker.template.TemplateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
+import org.tmatesoft.svn.core.SVNException;
 
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
 /**
- * Purpose.
- *
- * A description of why this class exists.  
- *   For what reason was it written?  
- *   Which jobs does it perform?
- * {@code DataAccessException} using 
+ * 周报服务资源类
+ *   1)收集提交信息
+ *   2)生成周报
  * @author how
  * @date 17/4/16
  */
@@ -41,6 +44,10 @@ public class GitCommitController {
     @Autowired
     private CommitRepository commitRepository;
 
+    @Autowired
+    private ReportService reportService;
+
+
     @RequestMapping(method = RequestMethod.POST)
     public void saveNewCommit(@RequestBody List<Commit> commitList){
         commitRepository.saveCommit(commitList);
@@ -49,5 +56,10 @@ public class GitCommitController {
     @RequestMapping(method = RequestMethod.GET)
     public List<Commit> queryCommitByUser(@RequestParam  String userId,@RequestParam @DateTimeFormat(pattern="yyyy-MM-dd") Date startDate){
         return commitRepository.findCommitByUser(userId,startDate);
+    }
+
+    @RequestMapping(method = RequestMethod.POST,value = "/generateReport")
+    public void generateReport(@RequestBody ReportModel reportModel) throws SVNException, TemplateException, IOException, ParseException {
+        reportService.generateReport(reportModel);
     }
 }

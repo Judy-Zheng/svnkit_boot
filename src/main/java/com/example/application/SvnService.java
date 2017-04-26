@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example;
+package com.example.application;
 
-import org.tmatesoft.svn.core.SVNCommitInfo;
-import org.tmatesoft.svn.core.SVNException;
-import org.tmatesoft.svn.core.SVNURL;
+import org.springframework.stereotype.Service;
+import org.tmatesoft.svn.core.*;
 import org.tmatesoft.svn.core.auth.BasicAuthenticationManager;
 import org.tmatesoft.svn.core.internal.io.dav.DAVRepositoryFactory;
 import org.tmatesoft.svn.core.io.ISVNEditor;
@@ -27,28 +26,41 @@ import org.tmatesoft.svn.core.io.diff.SVNDeltaGenerator;
 import java.io.ByteArrayInputStream;
 
 /**
- * Purpose.
- *
- * A description of why this class exists.  
- *   For what reason was it written?  
- *   Which jobs does it perform?
- * {@code DataAccessException} using 
+ * SVN 服务
+ * 1) 提交
  * @author how
  * @date 17/4/14
  */
+@Service
 public class SvnService {
 
-    public void commit() throws SVNException {
+    public void commit(String wordStr,String datePath,String submitter) throws SVNException {
         DAVRepositoryFactory.setup();
-        SVNURL svnurl = SVNURL.parseURIEncoded("https://182.92.186.10/svn/mszl/doc/00-项目管理/");
+        SVNURL svnurl = SVNURL.parseURIEncoded("https://182.92.186.10/svn/mszl/doc/00-项目管理/周报/");
         SVNRepository svnRepository = DAVRepositoryFactory.create(svnurl);
+
         BasicAuthenticationManager basicAuthenticationManager = BasicAuthenticationManager.newInstance("zhanghw", "zhanghw123".toCharArray());
         svnRepository.setAuthenticationManager(basicAuthenticationManager);
-        String logMessage = "log message";
+
+        SVNNodeKind nodeKind = svnRepository.checkPath(datePath, -1);
+        String fileName = "个人周报-"+submitter+".doc";
+        boolean needCreateDirectory = true;
+        boolean fileAlreadyExist = false;
+        if( nodeKind == SVNNodeKind.NONE ) {
+            needCreateDirectory = true;
+        }else if(nodeKind == SVNNodeKind.DIR){
+            needCreateDirectory = false;
+            SVNDirEntry dirEntry = svnRepository.info(datePath+"/"+fileName, -1);
+            if(dirEntry.getKind() != SVNNodeKind.NONE){
+                fileAlreadyExist = true;
+            }
+        }
+        String logMessage = "提交周报 message auto create by machine";
         ISVNEditor editor = svnRepository.getCommitEditor(logMessage, null);
         try {
-            byte[] contents = "This is a new file auto generate by machine.".getBytes( );
-            SVNCommitInfo commitInfo = addDir( editor , "test" , "test/"+System.currentTimeMillis()+".txt" , contents );
+            byte[] contents = wordStr.getBytes( );
+
+            SVNCommitInfo commitInfo = addDir( editor , datePath , fileName , contents,needCreateDirectory,fileAlreadyExist);
             System.out.println( "The directory was added: " + commitInfo );
         } catch ( SVNException svne ) {
             editor.abortEdit( );
@@ -56,14 +68,18 @@ public class SvnService {
         }
     }
 
-    public static void main(String[] args) throws SVNException {
-            new SvnService().commit();
-    }
-    private static SVNCommitInfo addDir(ISVNEditor editor , String dirPath , String filePath , byte[] data ) throws SVNException {
+    private static SVNCommitInfo addDir(ISVNEditor editor , String dirPath , String filePath , byte[] data ,boolean needCreateDirectory,boolean fileAlreadyExist) throws SVNException {
         editor.openRoot( -1 );
-        //editor.addDir( dirPath , null , -1 );
-        editor.openDir(dirPath,-1);
-        editor.addFile( filePath , null , -1 );
+        if(needCreateDirectory){
+            editor.addDir( dirPath , null , -1 );
+        }else{
+            editor.openDir(dirPath,-1);
+        }
+        if(fileAlreadyExist){
+            editor.openFile(filePath,-1);
+        }else{
+            editor.addFile( filePath , null , -1 );
+        }
 
         editor.applyTextDelta( filePath , null );
 

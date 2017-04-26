@@ -5,10 +5,11 @@
                 return date?moment(date).format('YYYY-MM-DD'):'';
             };
         })
-        .controller('MainController',['$scope','$http',function($scope,$http) {
+        .controller('MainController',['$scope','$http','$mdToast',function($scope, $http, $mdToast) {
             $scope.userReport = {
                 task:'1) 是是是  \n 2) 啥啥啥'
             }
+            var apiUrl = 'http://localhost:8080';
             $scope.selected = [];
             $scope.userId = 'how'
 
@@ -26,6 +27,7 @@
                 startDate:'',
                 endDate:'',
                 reporter:'',
+                committer:'',
                 submitDate:'',
                 summary:''
             }
@@ -56,12 +58,49 @@
 
             $scope.find = function() {
                 var startDate = moment($scope.newReport.startDate).format('YYYY-MM-DD');
-                $http.get("http://localhost:8080/commit?userId="+$scope.newReport.reporter+"&startDate="+startDate)
+                $http.get(apiUrl+"/commit?userId="+$scope.newReport.reporter+"&startDate="+startDate)
                     .then(function (resp) {
                     $scope.newReport.summary = resp.data.map(function (d) {
                         return d.message;
                     }).join('\n');
+                        $mdToast.show(
+                            $mdToast.simple()
+                                .textContent('查询成功!')
+                                .position('top right')
+                                .hideDelay(3000));
+                },function (err) {
+                        $mdToast.show(
+                            $mdToast.simple()
+                                .textContent('查询失败!'+err.data.message)
+                                .position('top right')
+                                .hideDelay(3000));
+                })
+            }
 
+            $scope.generateReport = function () {
+                var items = $scope.newReport.summary.split("\n");
+                items = items.map(function (val,index) {
+                    return {number:index+1,content:val}
+                })
+                var data = {
+                    beginDay:moment($scope.newReport.startDate).format('YYYY-MM-DD'),
+                    endDay:moment($scope.newReport.endDate).format('YYYY-MM-DD'),
+                    committer:$scope.newReport.committer,
+                    list:items
+                }
+                $http.post(apiUrl+'/commit/generateReport',data).then(function(rep) {
+                    $mdToast.show(
+                        $mdToast.simple()
+                            .textContent('生成周报成功!')
+                            .position('top right')
+                            .hideDelay(3000)
+                    );
+                },function (err) {
+                    $mdToast.show(
+                        $mdToast.simple()
+                            .textContent('生成周报失败!'+err.data.message)
+                            .position('top right')
+                            .hideDelay(3000));
                 })
             }
 

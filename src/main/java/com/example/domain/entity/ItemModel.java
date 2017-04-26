@@ -29,6 +29,9 @@ public class ItemModel {
     private String number;
     private String content;
 
+    public ItemModel() {
+    }
+
     public ItemModel(String number, String content) {
         this.number = number;
         this.content = content;

@@ -110,17 +110,27 @@
                             <md-datepicker ng-model="newReport.endDate"  md-placeholder="请选择开始日期" disabled></md-datepicker>
                         </li>
                         <li>
-                            <label>报告人</label>
+                            <label>任务执行者</label>
                             <input ng-model="newReport.reporter" type="text">
                         </li>
                         <li>
                             <label>提交日期</label>
                             <md-datepicker ng-model="newReport.submitDate" md-placeholder="请选择开始日期" disabled></md-datepicker>
                         </li>
-                        <li>
-                            <md-button class="md-primary" ng-click="find()">Primary Button</md-button>
-                        </li>
                     </ul>
+                </div>
+                <div layout="column" layout-xs="column">
+                    <md-divider></md-divider>
+                </div>
+                <div layout="row" layout-xs="column">
+                    <md-button class="md-raised md-primary" ng-click="find()">查询任务</md-button>
+                    <md-button class="md-raised md-warn" ng-click="generateReport()">提交周报</md-button>
+                </div>
+                <div layout="row" layout-xs="column">
+                    <md-input-container>
+                        <label>填写人</label>
+                        <input ng-model="newReport.committer" type="text"/>
+                    </md-input-container>
                 </div>
                 <div layout="column" layout-xs="column" class="report-table">
                     <div flex class="title-line">
