@@ -9,7 +9,7 @@
             $scope.userReport = {
                 task:'1) 是是是  \n 2) 啥啥啥'
             }
-            var apiUrl = 'http://localhost:8080';
+            var apiUrl = window.location.href;
             $scope.selected = [];
             $scope.userId = 'how'
 
