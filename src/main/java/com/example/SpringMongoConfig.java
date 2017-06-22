@@ -45,7 +45,7 @@ public class SpringMongoConfig extends AbstractMongoConfiguration {
     public Mongo mongo() throws Exception {
         List<MongoCredential> credentials = new ArrayList<>();
         credentials.add(MongoCredential.createCredential("myreport","admin","c0CKiJIVg2K2".toCharArray()));
-        return new MongoClient(new ServerAddress("127.0.0.1"),credentials);
+        return new MongoClient(new ServerAddress("my-mongodb"),credentials);
     }
 
 

@@ -50,8 +50,8 @@ public class SvnService {
             needCreateDirectory = true;
         }else if(nodeKind == SVNNodeKind.DIR){
             needCreateDirectory = false;
-            SVNDirEntry dirEntry = svnRepository.info(datePath+"/"+fileName, -1);
-            if(dirEntry.getKind() != SVNNodeKind.NONE){
+            SVNDirEntry dirEntry = svnRepository.info(datePath+fileName, -1);
+            if(dirEntry !=null && (dirEntry.getKind() == SVNNodeKind.FILE)){
                 fileAlreadyExist = true;
             }
         }
