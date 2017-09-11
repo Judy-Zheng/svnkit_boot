@@ -30,3 +30,22 @@
           "statusMessage": "Available"
       }
   }]
+  
+## mongo db
+*** 创建用户
+>> > use admin  
+   > db.createUser(  
+   {  
+       user: "admin",  
+       pwd: "123456",  
+       roles:  
+       [  
+         {  
+           role: "userAdminAnyDatabase",  
+           db: "admin"  
+         }  
+       ]  
+     }  
+   )
+  
+*** 镜像地址 https://hub.docker.com/_/mongo/
